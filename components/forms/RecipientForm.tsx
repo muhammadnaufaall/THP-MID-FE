@@ -17,7 +17,7 @@ const RecipientForm = () => {
   return (
     <>
       <FormControl mt={4} isInvalid={!!errors.bank}>
-        <FormLabel>Bank</FormLabel>
+        <FormLabel>Bank Name</FormLabel>
         <Input
           {...register("bank", { required: "Bank is required" })}
           variant="outline"

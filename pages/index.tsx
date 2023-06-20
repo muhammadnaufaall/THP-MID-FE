@@ -5,9 +5,9 @@ import React from "react";
 const Home = () => {
   return (
     <>
-      <Box maxW="container.sm" mx="auto" mt={8}>
+      <div>
         <MultiStepForm />
-      </Box>
+      </div>
     </>
   );
 };
