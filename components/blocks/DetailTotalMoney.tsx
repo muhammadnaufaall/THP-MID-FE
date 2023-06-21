@@ -1,4 +1,5 @@
-import { FormInputData } from "@/types/FormInputDataType";
+import React, { useEffect, useState } from "react";
+
 import {
   Box,
   Flex,
@@ -8,10 +9,14 @@ import {
   Radio,
   RadioGroup,
   Stack,
+  Text,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+
 import { Controller, useFormContext } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
+
+import { FormInputData } from "@/types/FormInputDataType";
+
 import FormSkeleton from "../loading/FormSkeleton";
 
 type DetailTotalMoneyProps = {
@@ -76,14 +81,20 @@ const DetailTotalMoney: React.FC<DetailTotalMoneyProps> = ({
         <Box boxShadow="md" p="6" mt={"8"} rounded="md" bg="white">
           <Flex rounded="xl" boxShadow="xs" bg="white" p={3}>
             <Box flex="1" textAlign="left">
-              <p className="text-sm font-semibold text-gray-900">
+              <Text
+                fontSize={"sm"}
+                fontWeight={"semibold"}
+                textColor={"gray.900"}>
                 The recipient will get :
-              </p>
+              </Text>
             </Box>
             <Box flex="1" textAlign="right">
-              <p className="text-sm font-semibold text-gray-900">
+              <Text
+                fontSize={"sm"}
+                fontWeight={"semibold"}
+                textColor={"gray.900"}>
                 {countTotalSend(selectedCountry, selectedRate)}
-              </p>
+              </Text>
             </Box>
           </Flex>
           <FormControl mt={4} isInvalid={!!errors.destinationCountry}>
@@ -94,8 +105,10 @@ const DetailTotalMoney: React.FC<DetailTotalMoneyProps> = ({
               render={({ field }) => (
                 <RadioGroup {...field} defaultValue={watch("service")}>
                   <Stack direction="row">
-                    {serviceRadioOptions.map((option) => (
-                      <Radio value={option.value}>{option.label}</Radio>
+                    {serviceRadioOptions.map((option, index) => (
+                      <Radio key={index} value={option.value}>
+                        {option.label}
+                      </Radio>
                     ))}
                   </Stack>
                 </RadioGroup>
@@ -107,10 +120,12 @@ const DetailTotalMoney: React.FC<DetailTotalMoneyProps> = ({
           </FormControl>
           <Flex mt={6} p={3}>
             <Box flex="1" textAlign="left">
-              <p className="text-sm text-gray-400">Rate Service :</p>
+              <Text fontSize={"sm"} textColor={"gray.400"}>
+                Rate Service :
+              </Text>
             </Box>
             <Box flex="1" textAlign="right">
-              <p className="text-sm text-gray-400">
+              <Text fontSize={"sm"} textColor={"gray.400"}>
                 {watch("service") === "Bank Transfer" ? (
                   <NumericFormat
                     value={35_000}
@@ -128,19 +143,25 @@ const DetailTotalMoney: React.FC<DetailTotalMoneyProps> = ({
                     prefix={"IDR "}
                   />
                 )}
-              </p>
+              </Text>
             </Box>
           </Flex>
           <Flex rounded="xl" boxShadow="xs" bg="white" p={3}>
             <Box flex="1" textAlign="left">
-              <p className="text-sm font-semibold text-gray-900">
-                The money you will pay :
-              </p>
+              <Text
+                fontSize={"sm"}
+                fontWeight={"semibold"}
+                textColor={"gray.900"}>
+                Total :
+              </Text>
             </Box>
             <Box flex="1" textAlign="right">
-              <p className="text-sm font-semibold text-gray-900">
+              <Text
+                fontSize={"sm"}
+                fontWeight={"semibold"}
+                textColor={"gray.900"}>
                 {countTotalPay()}
-              </p>
+              </Text>
             </Box>
           </Flex>
         </Box>

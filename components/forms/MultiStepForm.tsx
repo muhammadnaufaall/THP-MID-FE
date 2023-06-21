@@ -1,15 +1,20 @@
-import React, { lazy, Suspense, useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import React, { lazy, Suspense, useEffect, useState } from "react";
+
 import { Box, Button, useDisclosure, useToast } from "@chakra-ui/react";
+
+import { useForm, FormProvider } from "react-hook-form";
+import cookie from "js-cookie";
+
 import useMultiStepForm from "../../hooks/useMultiStepForm";
-const AmountForm = lazy(() => import("./AmountForm"));
-const RecipientForm = lazy(() => import("./RecipientForm"));
-import { FormInputData } from "@/types/FormInputDataType";
 import FormSkeleton from "../loading/FormSkeleton";
-import ConfirmationPayment from "../modals/ConfirmationPayment";
-import StepForm from "../stepper/StepForm";
-import { TbReportAnalytics } from "react-icons/tb";
-import TransactionList from "../buttons/TransactionList";
+
+import { FormInputData } from "@/types/FormInputDataType";
+
+const AmountForm = lazy(() => import("./AmountForm"));
+const ConfirmationPayment = lazy(() => import("../modals/ConfirmationPayment"));
+const RecipientForm = lazy(() => import("./RecipientForm"));
+const TransactionList = lazy(() => import("../buttons/TransactionList"));
+const StepForm = lazy(() => import("../stepper/StepForm"));
 
 const steps = [
   {
@@ -44,6 +49,16 @@ const MultiStepForm = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
+  // Get list transaction from cookie
+  useEffect(() => {
+    const cookieListTransaction = cookie.get("listTransaction");
+    if (cookieListTransaction) {
+      setTimeout(() => {
+        setListTransaction(JSON.parse(cookieListTransaction));
+      }, 100);
+    }
+  }, []);
+
   const {
     currentStepIndex,
     step: renderForm,
@@ -77,6 +92,10 @@ const MultiStepForm = () => {
       duration: 3000,
       isClosable: false,
     });
+    cookie.set(
+      "listTransaction",
+      JSON.stringify([...listTransaction, submittedData])
+    );
   };
 
   const onSubmit = () => {
@@ -101,7 +120,12 @@ const MultiStepForm = () => {
 
   return (
     <>
-      <TransactionList listTransaction={listTransaction} />
+      <Suspense fallback={<FormSkeleton quantity={1} />}>
+        <TransactionList
+          setListTransaction={setListTransaction}
+          listTransaction={listTransaction}
+        />
+      </Suspense>
       <Box
         boxShadow="base"
         p="6"
@@ -109,10 +133,13 @@ const MultiStepForm = () => {
         bg="white"
         maxW="container.sm"
         mx="auto"
-        mt={8}>
+        mt={8}
+        mb={8}>
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <StepForm activeStep={activeStep} steps={steps} />
+            <Suspense fallback={<FormSkeleton quantity={1} />}>
+              <StepForm activeStep={activeStep} steps={steps} />
+            </Suspense>
             {renderForm}
             {watch("service") && (
               <div className="flex justify-end gap-3 mt-5">
@@ -147,12 +174,14 @@ const MultiStepForm = () => {
                 )}
               </div>
             )}
-            <ConfirmationPayment
-              isOpen={isOpen}
-              onClose={onClose}
-              onSubmit={onSubmit}
-              isSubmitting={isSubmitting}
-            />
+            <Suspense fallback={null}>
+              <ConfirmationPayment
+                isOpen={isOpen}
+                onClose={onClose}
+                onSubmit={onSubmit}
+                isSubmitting={isSubmitting}
+              />
+            </Suspense>
           </form>
         </FormProvider>
       </Box>

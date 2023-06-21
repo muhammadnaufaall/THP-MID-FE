@@ -1,20 +1,20 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
-import { Controller, useFormContext } from "react-hook-form";
+
 import {
   FormControl,
   FormLabel,
-  RadioGroup,
-  Radio,
-  Stack,
   FormErrorMessage,
   Select,
-  Box,
-  Flex,
 } from "@chakra-ui/react";
-import { FormInputData } from "@/types/FormInputDataType";
-import { useFetch } from "@/hooks/useFetch";
-import FormSkeleton from "../loading/FormSkeleton";
+
+import { Controller, useFormContext } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
+
+import FormSkeleton from "../loading/FormSkeleton";
+
+import useFetch from "@/hooks/useFetch";
+import { FormInputData } from "@/types/FormInputDataType";
+
 const DetailTotalMoney = lazy(() => import("../blocks/DetailTotalMoney"));
 
 const AmountForm = () => {

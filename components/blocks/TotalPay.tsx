@@ -1,8 +1,11 @@
-import { FormInputData } from "@/types/FormInputDataType";
-import { Box, Flex } from "@chakra-ui/react";
 import React from "react";
+
+import { Box, Flex, Text } from "@chakra-ui/react";
+
 import { useFormContext } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
+
+import { FormInputData } from "@/types/FormInputDataType";
 
 type TotalPayProps = {
   uniqueCode: number;
@@ -15,26 +18,36 @@ const TotalPay: React.FC<TotalPayProps> = ({ uniqueCode }) => {
     <div className="mt-4">
       <Flex p={3}>
         <Box flex="1" textAlign="left">
-          <p className="text-sm text-gray-600">Send To :</p>
+          <Text fontSize={"sm"} textColor={"gray.600"}>
+            Send To :
+          </Text>
         </Box>
         <Box flex="1" textAlign="right">
-          <p className="text-sm text-gray-600">BCA</p>
+          <Text fontSize={"sm"} textColor={"gray.600"}>
+            BCA
+          </Text>
         </Box>
       </Flex>
       <Flex p={3}>
         <Box flex="1" textAlign="left">
-          <p className="text-sm text-gray-600">Account Number :</p>
+          <Text fontSize={"sm"} textColor={"gray.600"}>
+            Account Number :
+          </Text>
         </Box>
         <Box flex="1" textAlign="right">
-          <p className="text-sm text-gray-600">09718293463</p>
+          <Text fontSize={"sm"} textColor={"gray.600"}>
+            0289340273489
+          </Text>
         </Box>
       </Flex>
       <Flex p={3}>
         <Box flex="1" textAlign="left">
-          <p className="text-sm text-gray-900">Total :</p>
+          <Text fontSize={"sm"} textColor={"gray.900"}>
+            Total :
+          </Text>
         </Box>
         <Box flex="1" textAlign="right">
-          <p className="text-sm text-gray-900">
+          <Text fontSize={"sm"} textColor={"gray.900"}>
             {
               <NumericFormat
                 value={
@@ -47,15 +60,17 @@ const TotalPay: React.FC<TotalPayProps> = ({ uniqueCode }) => {
                 prefix={"IDR "}
               />
             }
-          </p>
+          </Text>
         </Box>
       </Flex>
       <Flex p={3}>
         <Box flex="1" textAlign="left">
-          <p className="text-sm font-semibold text-gray-900">Unique Code :</p>
+          <Text fontWeight={"semibold"} fontSize={"sm"} textColor={"gray.900"}>
+            Unique Code :
+          </Text>
         </Box>
         <Box flex="1" textAlign="right">
-          <p className="text-sm font-semibold text-gray-900">
+          <Text fontWeight={"semibold"} fontSize={"sm"} textColor={"gray.900"}>
             {
               <NumericFormat
                 value={uniqueCode}
@@ -65,17 +80,17 @@ const TotalPay: React.FC<TotalPayProps> = ({ uniqueCode }) => {
                 prefix={"IDR "}
               />
             }
-          </p>
+          </Text>
         </Box>
       </Flex>
-      <Flex rounded="xl" boxShadow="xs" bg="white" p={3}>
+      <Flex alignItems={"center"} rounded="xl" boxShadow="xs" bg="white" p={3}>
         <Box flex="1" textAlign="left">
-          <p className="text-sm font-semibold text-green-600">
-            Total Pay <span className="text-xs">(Total - Unique Code)</span> :
-          </p>
+          <Text fontWeight={"semibold"} fontSize={"sm"} textColor={"green.600"}>
+            Total Pay <Text fontSize={"2xs"}>(Total - Unique Code) :</Text>
+          </Text>
         </Box>
         <Box flex="1" textAlign="right">
-          <p className="text-sm font-semibold text-green-600">
+          <Text fontWeight={"semibold"} fontSize={"sm"} textColor={"green.600"}>
             {
               <NumericFormat
                 value={
@@ -89,7 +104,7 @@ const TotalPay: React.FC<TotalPayProps> = ({ uniqueCode }) => {
                 prefix={"IDR "}
               />
             }
-          </p>
+          </Text>
         </Box>
       </Flex>
     </div>

@@ -1,3 +1,5 @@
+import React, { ReactElement } from "react";
+
 import {
   Container,
   Step,
@@ -8,7 +10,6 @@ import {
   StepStatus,
   Stepper,
 } from "@chakra-ui/react";
-import React, { ReactElement } from "react";
 
 type StepFormProps = {
   activeStep: number;

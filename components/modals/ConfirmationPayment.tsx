@@ -1,7 +1,7 @@
+import React, { useEffect, useState, lazy, Suspense } from "react";
+
 import {
-  Box,
   Button,
-  Flex,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -10,15 +10,15 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import DetailTotalMoney from "../blocks/DetailTotalMoney";
-import { useFetch } from "@/hooks/useFetch";
+
+import useFetch from "@/hooks/useFetch";
 import { useFormContext } from "react-hook-form";
 import { FormInputData } from "@/types/FormInputDataType";
 import FormSkeleton from "../loading/FormSkeleton";
-import { NumericFormat } from "react-number-format";
-import TotalPay from "../blocks/TotalPay";
-import DetailSender from "../blocks/DetailSender";
+
+const DetailTotalMoney = lazy(() => import("../blocks/DetailTotalMoney"));
+const TotalPay = lazy(() => import("../blocks/TotalPay"));
+const DetailSender = lazy(() => import("../blocks/DetailSender"));
 
 type ConfirmationPaymentProps = {
   isOpen: boolean;
@@ -59,44 +59,48 @@ const ConfirmationPayment: React.FC<ConfirmationPaymentProps> = ({
   const fullName = watch("fullName");
 
   return (
-    <div>
-      <Modal size={"xl"} isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent maxH={"xl"}>
-          <ModalHeader>Detail Payment</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody overflowY={"auto"}>
-            {isLoading ? (
-              <FormSkeleton quantity={3} />
-            ) : (
-              <div className="flex flex-col">
+    <Modal size={"xl"} isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent maxH={"xl"}>
+        <ModalHeader>Detail Payment</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody overflowY={"auto"}>
+          {isLoading ? (
+            <FormSkeleton quantity={3} />
+          ) : (
+            <div className="flex flex-col">
+              <Suspense fallback={<FormSkeleton quantity={3} />}>
                 <DetailSender
                   accountNumber={accountNumber}
                   bankName={bankName}
                   fullName={fullName}
                 />
+              </Suspense>
+              <Suspense fallback={<FormSkeleton quantity={2} />}>
                 <DetailTotalMoney
                   selectedCountry={selectedCountry}
                   selectedRate={selectedRate}
                 />
+              </Suspense>
+              <Suspense fallback={<FormSkeleton quantity={1} />}>
                 <TotalPay uniqueCode={uniqueCode} />
-              </div>
-            )}
-          </ModalBody>
+              </Suspense>
+            </div>
+          )}
+        </ModalBody>
 
-          <ModalFooter>
-            <Button
-              isLoading={isSubmitting}
-              mt={4}
-              isDisabled={isSubmitting}
-              colorScheme="blue"
-              onClick={() => onSubmit()}>
-              Confirm
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </div>
+        <ModalFooter>
+          <Button
+            isLoading={isSubmitting}
+            mt={4}
+            isDisabled={isSubmitting}
+            colorScheme="blue"
+            onClick={() => onSubmit()}>
+            Confirm
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
 

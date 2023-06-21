@@ -1,5 +1,6 @@
-import { Box, Flex } from "@chakra-ui/react";
 import React from "react";
+
+import { Box, Flex, Text } from "@chakra-ui/react";
 
 type DetailSenderProps = {
   bankName: string;
@@ -16,26 +17,38 @@ const DetailSender: React.FC<DetailSenderProps> = ({
     <div>
       <Flex mt={6} p={3}>
         <Box flex="1" textAlign="left">
-          <p className="text-sm text-gray-600">Bank Name :</p>
+          <Text fontSize={"sm"} textColor={"gray.600"}>
+            Bank Name :
+          </Text>
         </Box>
         <Box flex="1" textAlign="right">
-          <p className="text-sm text-gray-600">{bankName}</p>
+          <Text fontSize={"sm"} textColor={"gray.600"}>
+            {bankName}
+          </Text>
         </Box>
       </Flex>
       <Flex p={3}>
         <Box flex="1" textAlign="left">
-          <p className="text-sm text-gray-600">Account Number :</p>
+          <Text fontSize={"sm"} textColor={"gray.600"}>
+            Account Number :
+          </Text>
         </Box>
         <Box flex="1" textAlign="right">
-          <p className="text-sm text-gray-600">{accountNumber}</p>
+          <Text fontSize={"sm"} textColor={"gray.600"}>
+            {accountNumber}
+          </Text>
         </Box>
       </Flex>
       <Flex p={3}>
         <Box flex="1" textAlign="left">
-          <p className="text-sm text-gray-600">Full Name :</p>
+          <Text fontSize={"sm"} textColor={"gray.600"}>
+            Full Name :
+          </Text>
         </Box>
         <Box flex="1" textAlign="right">
-          <p className="text-sm text-gray-600">{fullName}</p>
+          <Text fontSize={"sm"} textColor={"gray.600"}>
+            {fullName}
+          </Text>
         </Box>
       </Flex>
     </div>
