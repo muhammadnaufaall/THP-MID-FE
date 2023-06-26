@@ -119,8 +119,8 @@ const MultiStepForm = () => {
     FormInputData & { currentStepIndex: number }
   >("formData", {
     destinationCountry: "",
-    service: "",
-    amount: 0,
+    service: "Bank Transfer",
+    amount: 1_000_000,
     bank: "",
     accountNumber: "",
     fullName: "",
