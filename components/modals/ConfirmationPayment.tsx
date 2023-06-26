@@ -15,10 +15,11 @@ import useFetch from "@/hooks/useFetch";
 import { useFormContext } from "react-hook-form";
 import { FormInputData } from "@/types/FormInputDataType";
 import FormSkeleton from "../loading/FormSkeleton";
+import dynamic from "next/dynamic";
 
-const DetailTotalMoney = lazy(() => import("../blocks/DetailTotalMoney"));
-const TotalPay = lazy(() => import("../blocks/TotalPay"));
-const DetailSender = lazy(() => import("../blocks/DetailSender"));
+const DetailTotalMoney = dynamic(() => import("../blocks/DetailTotalMoney"));
+const TotalPay = dynamic(() => import("../blocks/TotalPay"));
+const DetailSender = dynamic(() => import("../blocks/DetailSender"));
 
 type ConfirmationPaymentProps = {
   isOpen: boolean;
@@ -69,22 +70,18 @@ const ConfirmationPayment: React.FC<ConfirmationPaymentProps> = ({
             <FormSkeleton quantity={3} />
           ) : (
             <div className="flex flex-col">
-              <Suspense fallback={<FormSkeleton quantity={3} />}>
-                <DetailSender
-                  accountNumber={accountNumber}
-                  bankName={bankName}
-                  fullName={fullName}
-                />
-              </Suspense>
-              <Suspense fallback={<FormSkeleton quantity={2} />}>
-                <DetailTotalMoney
-                  selectedCountry={selectedCountry}
-                  selectedRate={selectedRate}
-                />
-              </Suspense>
-              <Suspense fallback={<FormSkeleton quantity={1} />}>
-                <TotalPay uniqueCode={uniqueCode} />
-              </Suspense>
+              <DetailSender
+                accountNumber={accountNumber}
+                bankName={bankName}
+                fullName={fullName}
+              />
+
+              <DetailTotalMoney
+                selectedCountry={selectedCountry}
+                selectedRate={selectedRate}
+              />
+
+              <TotalPay uniqueCode={uniqueCode} />
             </div>
           )}
         </ModalBody>

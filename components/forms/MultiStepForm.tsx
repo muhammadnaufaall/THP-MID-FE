@@ -9,28 +9,24 @@ import useMultiStepForm from "../../hooks/useMultiStepForm";
 import FormSkeleton from "../loading/FormSkeleton";
 
 import { FormInputData } from "@/types/FormInputDataType";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import dynamic from "next/dynamic";
 
-const AmountForm = lazy(() => import("./AmountForm"));
-const ConfirmationPayment = lazy(() => import("../modals/ConfirmationPayment"));
-const RecipientForm = lazy(() => import("./RecipientForm"));
-const TransactionList = lazy(() => import("../buttons/TransactionList"));
-const StepForm = lazy(() => import("../stepper/StepForm"));
+const AmountForm = dynamic(() => import("./AmountForm"));
+const ConfirmationPayment = dynamic(
+  () => import("../modals/ConfirmationPayment")
+);
+const RecipientForm = dynamic(() => import("./RecipientForm"));
+const TransactionList = dynamic(() => import("../buttons/TransactionList"));
+const StepForm = dynamic(() => import("../stepper/StepForm"));
 
 const steps = [
   {
-    form: (
-      <Suspense fallback={<FormSkeleton quantity={3} />}>
-        <AmountForm />
-      </Suspense>
-    ),
+    form: <AmountForm />,
     name: "amountForm",
   },
   {
-    form: (
-      <Suspense fallback={<FormSkeleton quantity={3} />}>
-        <RecipientForm />
-      </Suspense>
-    ),
+    form: <RecipientForm />,
     name: "recipientForm",
   },
 ];
@@ -45,7 +41,7 @@ const MultiStepForm = () => {
       service: "Bank Transfer",
     },
   });
-  const { handleSubmit, watch } = methods;
+  const { handleSubmit, watch, setValue } = methods;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
@@ -77,6 +73,7 @@ const MultiStepForm = () => {
     total:
       watch("amount") + (watch("service") === "Bank Transfer" ? 35_000 : 5_000),
     status: "Pending",
+    currentStepIndex,
   };
 
   const succesSubmit = () => {
@@ -110,7 +107,7 @@ const MultiStepForm = () => {
     }
   };
 
-  const activeStep = currentStepIndex;
+  let activeStep = currentStepIndex;
 
   const disabledNextButton =
     !watch("destinationCountry") || !watch("amount") || !watch("service");
@@ -118,14 +115,51 @@ const MultiStepForm = () => {
   const disabledSubmitButton =
     !watch("accountNumber") || !watch("bank") || !watch("fullName");
 
+  const { localStorageData, setLocalStorageData } = useLocalStorage<
+    FormInputData & { currentStepIndex: number }
+  >("formData", {
+    destinationCountry: "",
+    service: "",
+    amount: 0,
+    bank: "",
+    accountNumber: "",
+    fullName: "",
+    total: 0,
+    status: "",
+    currentStepIndex: 0,
+  });
+
+  const watchedFields = watch();
+
+  // Update nilai form dan local storage menggunakan debounce
+  useEffect(() => {
+    watchedFields.currentStepIndex = activeStep;
+    setLocalStorageData(watchedFields);
+  }, [watchedFields, setLocalStorageData, activeStep]);
+
+  // Mengatur nilai form saat data diambil dari local storage
+  useEffect(() => {
+    if (localStorageData) {
+      const { currentStepIndex } = localStorageData;
+      goToStep(currentStepIndex);
+      setValue("destinationCountry", localStorageData.destinationCountry);
+      setValue("service", localStorageData.service);
+      setValue("amount", localStorageData.amount);
+      setValue("bank", localStorageData.bank);
+      setValue("accountNumber", localStorageData.accountNumber);
+      setValue("fullName", localStorageData.fullName);
+      setValue("total", localStorageData.total);
+      setValue("status", localStorageData.status);
+    }
+  }, [localStorageData, setValue]);
+
   return (
     <>
-      <Suspense fallback={<FormSkeleton quantity={1} />}>
-        <TransactionList
-          setListTransaction={setListTransaction}
-          listTransaction={listTransaction}
-        />
-      </Suspense>
+      <TransactionList
+        setListTransaction={setListTransaction}
+        listTransaction={listTransaction}
+      />
+
       <Box
         boxShadow="base"
         p="6"
@@ -137,9 +171,8 @@ const MultiStepForm = () => {
         mb={8}>
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Suspense fallback={<FormSkeleton quantity={1} />}>
-              <StepForm activeStep={activeStep} steps={steps} />
-            </Suspense>
+            <StepForm activeStep={activeStep} steps={steps} />
+
             {renderForm}
             {watch("service") && (
               <div className="flex justify-end gap-3 mt-5">
@@ -174,14 +207,12 @@ const MultiStepForm = () => {
                 )}
               </div>
             )}
-            <Suspense fallback={null}>
-              <ConfirmationPayment
-                isOpen={isOpen}
-                onClose={onClose}
-                onSubmit={onSubmit}
-                isSubmitting={isSubmitting}
-              />
-            </Suspense>
+            <ConfirmationPayment
+              isOpen={isOpen}
+              onClose={onClose}
+              onSubmit={onSubmit}
+              isSubmitting={isSubmitting}
+            />
           </form>
         </FormProvider>
       </Box>

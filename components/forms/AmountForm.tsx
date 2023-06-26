@@ -1,4 +1,4 @@
-import React, { useEffect, useState, lazy, Suspense } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   FormControl,
@@ -14,8 +14,9 @@ import FormSkeleton from "../loading/FormSkeleton";
 
 import useFetch from "@/hooks/useFetch";
 import { FormInputData } from "@/types/FormInputDataType";
+import dynamic from "next/dynamic";
 
-const DetailTotalMoney = lazy(() => import("../blocks/DetailTotalMoney"));
+const DetailTotalMoney = dynamic(() => import("../blocks/DetailTotalMoney"));
 
 const AmountForm = () => {
   const {
@@ -100,12 +101,10 @@ const AmountForm = () => {
         </FormErrorMessage>
       </FormControl>
       {selectedCountry && watch("amount") ? (
-        <Suspense fallback={<FormSkeleton quantity={2} />}>
-          <DetailTotalMoney
-            selectedCountry={selectedCountry}
-            selectedRate={selectedRate}
-          />
-        </Suspense>
+        <DetailTotalMoney
+          selectedCountry={selectedCountry}
+          selectedRate={selectedRate}
+        />
       ) : null}
     </>
   );

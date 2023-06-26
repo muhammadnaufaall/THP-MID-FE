@@ -5,8 +5,9 @@ import { Box, useDisclosure } from "@chakra-ui/react";
 import { TbReportAnalytics } from "react-icons/tb";
 
 import { FormInputData } from "@/types/FormInputDataType";
+import dynamic from "next/dynamic";
 
-const HistoryModal = lazy(() => import("../modals/HistoryModal"));
+const HistoryModal = dynamic(() => import("../modals/HistoryModal"));
 
 type TransactionListProps = {
   listTransaction: FormInputData[];
@@ -32,14 +33,12 @@ const TransactionList: React.FC<TransactionListProps> = ({
           </div>
         </div>
       </Box>
-      <Suspense fallback={null}>
-        <HistoryModal
-          isOpen={isOpen}
-          onClose={onClose}
-          listTransaction={listTransaction}
-          setListTransaction={setListTransaction}
-        />
-      </Suspense>
+      <HistoryModal
+        isOpen={isOpen}
+        onClose={onClose}
+        listTransaction={listTransaction}
+        setListTransaction={setListTransaction}
+      />
     </>
   );
 };

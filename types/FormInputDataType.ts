@@ -7,4 +7,5 @@ export type FormInputData = {
   fullName: string;
   total: number;
   status: string;
+  currentStepIndex: number;
 };

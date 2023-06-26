@@ -16,9 +16,10 @@ import {
 import { FormInputData } from "@/types/FormInputDataType";
 import FormSkeleton from "../loading/FormSkeleton";
 import cookie from "js-cookie";
+import dynamic from "next/dynamic";
 
-const CardHistory = lazy(() => import("../cards/CardHistory"));
-const AlertDelete = lazy(() => import("../alerts/AlertDelete"));
+const CardHistory = dynamic(() => import("../cards/CardHistory"));
+const AlertDelete = dynamic(() => import("../alerts/AlertDelete"));
 
 type HistoryModalProps = {
   isOpen: boolean;
@@ -85,25 +86,23 @@ const HistoryModal: React.FC<HistoryModalProps> = ({
               <Text textAlign={"center"}>There's no transaction yet</Text>
             )}
             {listTransaction.map((transaction, index) => (
-              <Suspense key={index} fallback={<FormSkeleton quantity={1} />}>
-                <CardHistory
-                  amountTotal={transaction.amount}
-                  sender={transaction.fullName}
-                  status={transaction.status}
-                />
-              </Suspense>
+              <CardHistory
+                key={index}
+                amountTotal={transaction.amount}
+                sender={transaction.fullName}
+                status={transaction.status}
+              />
             ))}
           </Flex>
-          <Suspense fallback={null}>
-            <AlertDelete
-              isOpen={isAlertOpen}
-              onClose={onCLoseAlert}
-              onConfirm={removeHistory}
-              isLoading={isLoading}
-              descriptionAlert="Are you sure want to delete all your transaction history?"
-              titleAlert="Delete History"
-            />
-          </Suspense>
+
+          <AlertDelete
+            isOpen={isAlertOpen}
+            onClose={onCLoseAlert}
+            onConfirm={removeHistory}
+            isLoading={isLoading}
+            descriptionAlert="Are you sure want to delete all your transaction history?"
+            titleAlert="Delete History"
+          />
         </ModalBody>
       </ModalContent>
     </Modal>
